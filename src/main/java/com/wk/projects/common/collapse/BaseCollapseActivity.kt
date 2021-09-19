@@ -12,6 +12,7 @@ import com.wk.projects.common.communication.constant.BundleKey.FILE
 import kotlinx.android.synthetic.main.common_activity_collapse.*
 import java.io.File
 import java.util.*
+import kotlin.system.exitProcess
 
 /**
  * <pre>
@@ -39,8 +40,9 @@ abstract class BaseCollapseActivity : BaseProjectsActivity(), View.OnClickListen
         setFinishOnTouchOutside(false)
         btn_appRestart.setOnClickListener(this)
         btn_appClose.setOnClickListener(this)
-        val logPath = intent.getStringExtra(BundleKey.PATH)
-        val fileList = File(logPath).listFiles()?.toList()?:ArrayList<File>()
+        val logPath:String = intent.getStringExtra(BundleKey.PATH)?:return
+
+        val fileList = File(logPath).listFiles()?.toList()?:ArrayList()
         Collections.reverse(fileList)
         collapseAdapter = CollapseRvAdapter(fileList)
         collapseAdapter.setOnItemChildClickListener { _, _, position ->
@@ -49,7 +51,7 @@ abstract class BaseCollapseActivity : BaseProjectsActivity(), View.OnClickListen
             startActivity(watchIntent)
 
         }
-        rvCollapseFile.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(this)
+        rvCollapseFile.layoutManager = LinearLayoutManager(this)
         rvCollapseFile.adapter = collapseAdapter
     }
 
@@ -60,20 +62,20 @@ abstract class BaseCollapseActivity : BaseProjectsActivity(), View.OnClickListen
                 intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
                 startActivity(intent)
                 android.os.Process.killProcess(android.os.Process.myPid())
-                System.exit(0)
+                exitProcess(0)
             }
             btn_appClose -> {
                 android.os.Process.killProcess(android.os.Process.myPid())
-                System.exit(0)
+                exitProcess(0)
             }
         }
     }
 
 
-    //重启后打开的界面
+    /**重启后打开的界面*/
     abstract fun reStartActivityClass(): Class<out BaseProjectsActivity>
 
-    //查看日志的界面
+    /**查看日志的界面*/
     abstract fun initWatchActivityClass(): Class<out BaseWatchActivity>
 
 }

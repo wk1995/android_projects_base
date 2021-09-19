@@ -40,6 +40,7 @@ class CrashHandler private constructor(private val context: Context,
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     override fun uncaughtException(thread: Thread, ex: Throwable) {
         try {
+            ex.printStackTrace()
             //导出异常信息到SD卡中
             val fileName = dumpExceptionToSDCard(ex)
             //上传异常信息到服务器，便于开发人员分析日志从而解决bug
@@ -55,24 +56,9 @@ class CrashHandler private constructor(private val context: Context,
             intent.putExtra(PATH, logPath)
             intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
             intent.action = "com.wk.projects.collapse"
-            Observable.just(intent).subscribeOn(Schedulers.newThread()).subscribe {
-                Looper.prepare()
-                try {
-                    context.startActivity(it)
-                } catch (e: Exception) {
-                    e.printStackTrace()
-                }
-                Looper.loop()
-            }
+            context.startActivity(intent)
         }
-        ex.printStackTrace()
-        //如果系统提供了默认的异常处理器，则交给系统去结束程序，否则就由自己结束自己
-        if (mDefaultCrashHandler != null)
-            mDefaultCrashHandler?.uncaughtException(thread, ex)
-        else
-            Process.killProcess(Process.myPid())
-
-
+        Process.killProcess(Process.myPid())
     }
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
@@ -95,7 +81,7 @@ class CrashHandler private constructor(private val context: Context,
         }
         val stackTrace = ex.stackTrace
 
-        var errorText = "错误：" + ex.toString() + "  \n  "
+        var errorText = "错误：$ex  \n  "
         for (i in stackTrace.indices) {
             errorText += (stackTrace[i].fileName + " class:"
                     + stackTrace[i].className + " method:"
