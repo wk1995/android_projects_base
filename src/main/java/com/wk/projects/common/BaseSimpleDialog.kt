@@ -18,6 +18,18 @@ import kotlinx.android.synthetic.main.common_dialog_fragment_base_simple.*
 
 
 abstract class BaseSimpleDialog : BaseDialogFragment(), View.OnClickListener {
+    interface SimpleOnlyEtDialogListener {
+        /**
+         * @return 是否拦截 true，拦截，不使用父方法
+         */
+        fun ok(bundle: Bundle?=null): Boolean
+
+        /**
+         * @return 是否拦截 true，拦截，不使用父方法
+         */
+        fun cancel(bundle: Bundle?=null): Boolean
+    }
+    var simpleOnlyEtDialogListener: SimpleOnlyEtDialogListener? = null
 
     final override fun initResLayId() = R.layout.common_dialog_fragment_base_simple
 
@@ -27,8 +39,26 @@ abstract class BaseSimpleDialog : BaseDialogFragment(), View.OnClickListener {
     }
 
     override fun onClick(v: View?) {
-        disMiss()
+        when(v?.id){
+            R.id.btnComSimpleDialogOk->{
+                if (simpleOnlyEtDialogListener?.ok(getOkBundle())!=false) {
+                    return
+                }
+                disMiss()
+            }
+            R.id.btnComSimpleDialogCancel->{
+                if (simpleOnlyEtDialogListener?.cancel(getCancelBundle())!=false) {
+                    return
+                }
+                disMiss()
+            }
+        }
     }
+
+
+    open fun getOkBundle():Bundle?=null
+
+    open fun getCancelBundle():Bundle?=null
 
     protected fun disMiss() {
         if (dialog != null && dialog.isShowing)

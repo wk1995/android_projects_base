@@ -27,7 +27,7 @@ abstract class BaseDialogFragment : DialogFragment() {
     protected lateinit var iFa:IFragmentToActivity
 
 
-    override fun onAttach(context: Context?) {
+    override fun onAttach(context: Context) {
         super.onAttach(context)
         mActivity = context as BaseProjectsActivity
         iFa=mActivity
@@ -66,7 +66,7 @@ abstract class BaseDialogFragment : DialogFragment() {
         }
 
     }
-
+    open fun getBackgroundDrawable()=ColorDrawable(Color.TRANSPARENT)
     abstract fun initResLayId(): Int
     abstract fun bindView(savedInstanceState: Bundle?)
 }

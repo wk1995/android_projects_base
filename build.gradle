@@ -85,7 +85,8 @@ dependencies {
 //    releaseComplie 'com.squareup.leakcanary:leakcanary-android-no-op:1.5'
 //    testComplie 'com.squareup.leakcanary:leakcanary-android-no-op:1.5'
 
-
+    //时间选择
+    api 'com.contrarywind:Android-PickerView:4.1.9'
 
 }
 repositories {

@@ -15,7 +15,7 @@ import androidx.core.content.ContextCompat
  */
 object WkContextCompat {
 
-    fun getColor(context: Context, color: Int) {
+    fun getColor(context: Context, color: Int)=
         ContextCompat.getColor(context, color)
-    }
+
 }
