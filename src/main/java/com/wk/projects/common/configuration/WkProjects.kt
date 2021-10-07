@@ -20,20 +20,20 @@ object WkProjects {
     const val UNUSED="unused"
     @JvmStatic
     fun init(context: Context): WkConfiguration {
-        getInfo().put(CONTEXT, context.applicationContext)
+        getInfo()[CONTEXT] = context.applicationContext
         return WkConfiguration.getInstance()
     }
 
     @JvmStatic
-    private fun getInfo() = WkConfiguration.getInstance().info
+    private fun getInfo():HashMap<String,Any?> = WkConfiguration.getInstance().info
 
     fun getApplication():Context=getInfo()[CONTEXT] as Application
 
     @JvmStatic
-    fun <T> getConfiguration(key: Int) =
-            getInfo()[key] as? T
+    fun <T> getConfiguration(key: String,default: T?=null) =
+            getInfo()[key] as? T?:default
 
     @JvmStatic
-    fun setConfiguration(key: Int, any: Any) = getInfo().put(key, any)
+    fun setConfiguration(key: String, any: Any) = getInfo().put(key, any)
 
 }

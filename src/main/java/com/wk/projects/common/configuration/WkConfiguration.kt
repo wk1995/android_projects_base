@@ -18,7 +18,7 @@ import com.wk.projects.common.configuration.ConfigureKey.MODULE_NAME
  */
 class WkConfiguration private constructor() {
 
-    internal val info by lazy { SparseArray<Any?>() }
+    internal val info by lazy { HashMap<String,Any?>() }
 
     companion object {
         object WkConfigurationViewHolder {
@@ -31,7 +31,7 @@ class WkConfiguration private constructor() {
     }
 
     fun withModuleName(moduleName: String): WkConfiguration {
-        info.put(MODULE_NAME, moduleName)
+        info[MODULE_NAME] = moduleName
         return this
     }
 

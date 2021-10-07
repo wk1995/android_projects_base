@@ -11,7 +11,7 @@ package com.wk.projects.common.configuration
  * </pre>
  */
 object ConfigureKey {
-    const val CONTEXT=1
-    const val MODULE_NAME=2
+    const val CONTEXT="base_context"
+    const val MODULE_NAME="base_module_name"
 
 }
