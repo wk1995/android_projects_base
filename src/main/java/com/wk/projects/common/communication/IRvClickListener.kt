@@ -15,5 +15,5 @@ import android.os.Bundle
 interface IRvClickListener {
     fun onItemClick(bundle: Bundle?,vararg any: Any?)
 
-    fun onItemLongClick(bundle: Bundle?,vararg any: Any?)
+    fun onItemLongClick(bundle: Bundle?=null,vararg any: Any?):Boolean
 }
