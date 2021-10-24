@@ -41,13 +41,13 @@ abstract class BaseSimpleDialog : BaseDialogFragment(), View.OnClickListener {
     override fun onClick(v: View?) {
         when(v?.id){
             R.id.btnComSimpleDialogOk->{
-                if (simpleOnlyEtDialogListener?.ok(getOkBundle())!=false) {
+                if (simpleOnlyEtDialogListener?.ok(getOkBundle())==true) {
                     return
                 }
                 disMiss()
             }
             R.id.btnComSimpleDialogCancel->{
-                if (simpleOnlyEtDialogListener?.cancel(getCancelBundle())!=false) {
+                if (simpleOnlyEtDialogListener?.cancel(getCancelBundle())==true) {
                     return
                 }
                 disMiss()
