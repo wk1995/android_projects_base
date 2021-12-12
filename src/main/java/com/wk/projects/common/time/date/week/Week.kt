@@ -8,7 +8,7 @@ package com.wk.projects.common.time.date.week
  */
 
 
-enum class Week(chinese: String) {
+enum class Week(val chinese: String) {
     Monday("星期一"),
     Tuesday("星期二"),
     Wednesday("星期三"),

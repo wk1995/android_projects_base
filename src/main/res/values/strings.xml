@@ -14,4 +14,6 @@
     <string name="common_str_zh_account">账户</string>
     <string name="common_str_zh_month">月</string>
     <string name="common_str_time">时间</string>
+    <string name="common_str_name">名称</string>
+    <string name="common_str_amount_zero">0.00</string>
 </resources>
