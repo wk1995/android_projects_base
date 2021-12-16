@@ -2,7 +2,9 @@ package com.wk.projects.common.helper
 
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import android.util.Log
+import com.wk.projects.common.configuration.WkProjects
+import com.wk.projects.common.log.WkLog
+import java.nio.ByteBuffer
 import kotlin.math.roundToInt
 
 
@@ -19,7 +21,7 @@ object WkBitmapUtil {
 
     /**获取图片大小*/
     @JvmStatic
-    fun getBitmapSize(bitmap: Bitmap)=bitmap.byteCount
+    fun getBitmapSize(bitmap: Bitmap) = bitmap.byteCount
 
 
     fun calculateInSampleSize(options: BitmapFactory.Options,
@@ -27,7 +29,7 @@ object WkBitmapUtil {
         // 源图片的高度和宽度
         val height = options.outHeight
         val width = options.outWidth
-        Log.i("wk","height: $height  width: $width")
+        WkLog.i("wk", "height: $height  width: $width")
         var inSampleSize = 1
         if (height > reqHeight || width > reqWidth) {
             // 计算出实际宽高和目标宽高的比率
@@ -39,4 +41,26 @@ object WkBitmapUtil {
         }
         return inSampleSize
     }
+
+
+    fun getBitmapByBytes(bytes: ByteArray?, options: BitmapFactory.Options? = BitmapFactory.Options(),
+                         defaultBitmap: Bitmap): Bitmap {
+        return BitmapFactory.decodeByteArray(bytes, 0, bytes?.size?:0,
+                options)?:defaultBitmap
+
+    }
+
+    fun getBitmap(drawableResId: Int)=
+        BitmapFactory.decodeResource(WkProjects.getApplication().resources,
+                drawableResId)
+
+
+    fun getByteArrayByBitmap(bitmap: Bitmap):ByteArray{
+        val bytes: Int = bitmap.byteCount
+        val buf: ByteBuffer = ByteBuffer.allocate(bytes)
+        bitmap.copyPixelsToBuffer(buf)
+        return buf.array()
+    }
+
+
 }
