@@ -5,6 +5,7 @@ import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import com.wk.projects.common.communication.IFragmentToActivity
 import com.wk.projects.common.log.WkLog
+import com.wk.projects.common.ui.WkToast
 
 /**
  * <pre>
@@ -37,40 +38,47 @@ abstract class BaseProjectsActivity : AppCompatActivity(), IFragmentToActivity,
 
     override fun onStart() {
         super.onStart()
-        WkLog.d("${this::class.java.simpleName} onStart")
+        WkLog.d("${this::class.java.simpleName} onStart",TAG)
     }
 
     override fun onResume() {
         super.onResume()
-        WkLog.d("${this::class.java.simpleName} onResume")
+        WkLog.d("${this::class.java.simpleName} onResume",TAG)
     }
 
     override fun onRestart() {
         super.onRestart()
-        WkLog.d("${this::class.java.simpleName} onRestart")
+        WkLog.d("${this::class.java.simpleName} onRestart",TAG)
     }
 
 
 
     override fun onPause() {
         super.onPause()
-        WkLog.d("${this::class.java.simpleName} onPause")
+        WkLog.d("${this::class.java.simpleName} onPause",TAG)
     }
 
     override fun onStop() {
         super.onStop()
-        WkLog.d("${this::class.java.simpleName} onStop")
+        WkLog.d("${this::class.java.simpleName} onStop",TAG)
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        WkLog.d("${this::class.java.simpleName} onDestroy")
+        WkLog.d("${this::class.java.simpleName} onDestroy",TAG)
     }
 
 
     override fun communication(flag: Int, bundle: Bundle?, any: Any?) {}
 
-    open fun beforeSetContentView() {}
+    open fun beforeSetContentView() {
+        if(hideSupportActionBar()){
+            supportActionBar?.hide()
+        }
+    }
+
+    open fun hideSupportActionBar():Boolean=true
+
     override fun onClick(v: View?) {
     }
 
@@ -80,4 +88,8 @@ abstract class BaseProjectsActivity : AppCompatActivity(), IFragmentToActivity,
 
     abstract fun initResLayId(): Any
     abstract fun bindView(savedInstanceState: Bundle?, mBaseProjectsActivity: BaseProjectsActivity)
+
+    fun showToast(msg:String){
+        WkToast.showToast(msg)
+    }
 }
