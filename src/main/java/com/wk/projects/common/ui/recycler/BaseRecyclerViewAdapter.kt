@@ -15,9 +15,11 @@ import androidx.recyclerview.widget.RecyclerView
  *      CSDN   : http://blog.csdn.net/qq_33882671
  * */
 abstract class BaseRecyclerViewAdapter<R, T : RecyclerView.ViewHolder>(
-        private val mData: MutableList<R> = ArrayList(),
+        protected val mData: MutableList<R> = ArrayList(),
         val adapter: RecyclerView.Adapter<T>? = null)
     : RecyclerView.Adapter<T>() {
+
+    var mIRvClickListener: IRvClickListener? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): T {
         val result = adapter?.onCreateViewHolder(parent, viewType)
@@ -42,29 +44,29 @@ abstract class BaseRecyclerViewAdapter<R, T : RecyclerView.ViewHolder>(
     /**包括了header和footer*/
     override fun getItemCount() = mData.size
 
-    private fun getDataCount()= mData.size
+    private fun getDataCount() = mData.size
 
     fun getDataReallyPosition(position: Int) = position
 
     fun getItem(position: Int) = mData[getDataReallyPosition(position)]
 
-    fun updateData(data:List<R>){
+    fun updateData(data: List<R>) {
         mData.clear()
         mData.addAll(data)
         notifyDataSetChanged()
     }
 
-    fun addData(data:R){
+    fun addData(data: R) {
         mData.add(data)
         notifyItemInserted(getDataCount())
     }
 
-    fun addData(index:Int,data: R){
-        mData.add(index,data)
-        notifyItemRangeChanged(index,itemCount)
+    fun addData(index: Int, data: R) {
+        mData.add(index, data)
+        notifyItemRangeChanged(index, itemCount)
     }
 
-    fun replaceData(index: Int,data: R){
+    fun replaceData(index: Int, data: R) {
 
     }
 
