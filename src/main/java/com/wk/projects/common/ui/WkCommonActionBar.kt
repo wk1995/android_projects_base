@@ -21,6 +21,7 @@ import com.wk.projects.common.R
 class WkCommonActionBar : ConstraintLayout {
     private lateinit var ivActionBarLeft:ImageView
     private lateinit var tvActionBarMiddle:TextView
+    private lateinit var tvActionBarRight:TextView
     private val mLayoutInflater by lazy { LayoutInflater.from(context) }
 
     constructor(context: Context) : super(context)
@@ -42,6 +43,7 @@ class WkCommonActionBar : ConstraintLayout {
     private fun initView(){
         ivActionBarLeft=findViewById(R.id.ivActionBarLeft)
         tvActionBarMiddle=findViewById(R.id.tvActionBarMiddle)
+        tvActionBarRight=findViewById(R.id.tvActionBarRight)
     }
 
     fun setLeftViewClickListener(onClickListener: OnClickListener){
@@ -63,6 +65,17 @@ class WkCommonActionBar : ConstraintLayout {
     fun setMiddleViewTextColor(colorId: Int){
         tvActionBarMiddle.setTextColor(colorId)
     }
+
+    fun setRightViewText(resId: Int){
+        tvActionBarRight.setText(resId)
+        tvActionBarRight.visibility=View.VISIBLE
+    }
+
+    fun setRightViewClickListener(onClickListener: OnClickListener){
+        tvActionBarRight.setOnClickListener(onClickListener)
+    }
+
+    fun getRightViewId()=tvActionBarRight.id
 
 
 
