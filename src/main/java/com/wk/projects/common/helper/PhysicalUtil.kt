@@ -1,4 +1,4 @@
-package com.wk.projects.common
+package com.wk.projects.common.helper
 
 import android.content.Context
 import android.util.DisplayMetrics

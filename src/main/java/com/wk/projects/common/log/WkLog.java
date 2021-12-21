@@ -4,11 +4,14 @@ import com.wk.projects.common.constant.WkSuppressConstants;
 import com.wk.projects.common.log.disk.IDiskPrintStrategy;
 import com.wk.projects.common.log.local.AndroidLogPrintStrategy;
 import com.wk.projects.common.log.local.ILocalPrintStrategy;
-import com.wk.projects.common.log.local.SystemPrintStrategy;
 import com.wk.projects.common.log.service.IServicePrintStrategy;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  *
@@ -23,7 +26,10 @@ import java.util.List;
  */
 @SuppressWarnings(WkSuppressConstants.UNUSED)
 public class WkLog {
-
+    private static final Pattern ANONYMOUS_CLASS = Pattern.compile("(\\$\\d+)+$");
+    private static final int MAX_LOG_LENGTH = 4000;
+    private static final int MAX_TAG_LENGTH = 23;
+    private static final int CALL_STACK_INDEX = 3;
 
     /**
      * Priority constant for the println method; use Log.v.
@@ -70,6 +76,7 @@ public class WkLog {
      */
     public static int i(Object logContent, String... tag) {
         int result=0;
+        tag=checkTag(tag);
         if(diskPrintStrategy!=null){
             result+=diskPrintStrategy.i(logContent,tag);
         }
@@ -90,14 +97,15 @@ public class WkLog {
      */
     public static int d(Object logContent, String... tag) {
         int result=0;
+        tag=checkTag(tag);
         if(diskPrintStrategy!=null){
-            result+=diskPrintStrategy.i(logContent,tag);
+            result+=diskPrintStrategy.d(logContent,tag);
         }
         if(servicePrintStrategy!=null){
-            result+=servicePrintStrategy.i(logContent,tag);
+            result+=servicePrintStrategy.d(logContent,tag);
         }
         if(localPrintStrategy!=null){
-            result+=localPrintStrategy.i(logContent,tag);
+            result+=localPrintStrategy.d(logContent,tag);
         }
         return result;
     }
@@ -107,16 +115,17 @@ public class WkLog {
      * @param tag        used to identify the source of a log message
      *                   if is null ,it is the class`s name where the log call occurs
      */
-    public static int e(String tag, Object logContent) {
+    public static int e(Object logContent, String... tag) {
         int result=0;
+        tag=checkTag(tag);
         if(diskPrintStrategy!=null){
-            result+=diskPrintStrategy.i(logContent,tag);
+            result+=diskPrintStrategy.e(logContent,tag);
         }
         if(servicePrintStrategy!=null){
-            result+=servicePrintStrategy.i(logContent,tag);
+            result+=servicePrintStrategy.e(logContent,tag);
         }
         if(localPrintStrategy!=null){
-            result+=localPrintStrategy.i(logContent,tag);
+            result+=localPrintStrategy.e(logContent,tag);
         }
         return result;
     }
@@ -126,16 +135,17 @@ public class WkLog {
      * @param tag        used to identify the source of a log message
      *                   if is null ,it is the class`s name where the log call occurs
      */
-    public static int w(String tag, Object logContent) {
+    public static int w(Object logContent, String... tag) {
         int result=0;
+        tag=checkTag(tag);
         if(diskPrintStrategy!=null){
-            result+=diskPrintStrategy.i(logContent,tag);
+            result+=diskPrintStrategy.w(logContent,tag);
         }
         if(servicePrintStrategy!=null){
-            result+=servicePrintStrategy.i(logContent,tag);
+            result+=servicePrintStrategy.w(logContent,tag);
         }
         if(localPrintStrategy!=null){
-            result+=localPrintStrategy.i(logContent,tag);
+            result+=localPrintStrategy.w(logContent,tag);
         }
         return result;
     }
@@ -145,18 +155,49 @@ public class WkLog {
      * @param tag        used to identify the source of a log message
      *                   if is null ,it is the class`s name where the log call occurs
      */
-    public static int v(String tag, Object logContent) {
+    public static int v(Object logContent, String... tag) {
         int result=0;
+        tag=checkTag(tag);
         if(diskPrintStrategy!=null){
-            result+=diskPrintStrategy.i(logContent,tag);
+            result+=diskPrintStrategy.v(logContent,tag);
         }
         if(servicePrintStrategy!=null){
-            result+=servicePrintStrategy.i(logContent,tag);
+            result+=servicePrintStrategy.v(logContent,tag);
         }
         if(localPrintStrategy!=null){
-            result+=localPrintStrategy.i(logContent,tag);
+            result+=localPrintStrategy.v(logContent,tag);
         }
         return result;
+    }
+
+    private static String[] checkTag(String... tag){
+        if(tag.length==0){
+            return new String[]{getDefaultTag()};
+        }
+        return tag;
+    }
+
+    private static String getDefaultTag(){
+        StackTraceElement[] stackTrace = new Throwable().getStackTrace();
+        if (stackTrace.length <= CALL_STACK_INDEX) {
+            throw new IllegalStateException(
+                    "Synthetic stacktrace didn't have enough elements: are you using proguard?");
+        }
+        return createStackElementTag(stackTrace[CALL_STACK_INDEX]);
+    }
+
+    @NotNull
+    protected static String createStackElementTag(@NotNull StackTraceElement element) {
+        String tag = element.getClassName();
+        Matcher m = ANONYMOUS_CLASS.matcher(tag);
+        if (m.find()) {
+            tag = m.replaceAll("");
+        }
+        tag = tag.substring(tag.lastIndexOf('.') + 1);
+        if (tag.length() <= MAX_TAG_LENGTH ) {
+            return tag;
+        }
+        return tag.substring(0, MAX_TAG_LENGTH);
     }
 
 }

@@ -15,7 +15,10 @@ import androidx.core.content.ContextCompat
  */
 object WkContextCompat {
 
-    fun getColor(context: Context, color: Int)=
-        ContextCompat.getColor(context, color)
+    fun getColor(context: Context, colorResId: Int) =
+            ContextCompat.getColor(context, colorResId)
+
+    fun getDrawable(context: Context, drawableResId: Int) =
+            ContextCompat.getDrawable(context, drawableResId)
 
 }
