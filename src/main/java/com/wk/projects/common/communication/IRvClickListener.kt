@@ -12,6 +12,7 @@ import android.os.Bundle
  *      desc   :
  * </pre>
  */
+@Deprecated("see com.wk.projects.common.ui.recycler.IRvClickListener")
 interface IRvClickListener {
     fun onItemClick(bundle: Bundle?,vararg any: Any?)
 
