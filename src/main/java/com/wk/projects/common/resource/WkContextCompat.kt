@@ -16,8 +16,11 @@ import com.wk.projects.common.configuration.WkProjects
  */
 object WkContextCompat {
 
+    @Deprecated("use getColor instead", ReplaceWith("WkContextCompat.getColor(colorResId)", "com.wk.projects.common.resource"))
     fun getColor(context: Context, colorResId: Int) =
             ContextCompat.getColor(context, colorResId)
+
+    fun getColor(colorResId: Int)=ContextCompat.getColor(WkProjects.getApplication(), colorResId)
 
     fun getDrawable(context: Context, drawableResId: Int) =
             ContextCompat.getDrawable(context, drawableResId)
