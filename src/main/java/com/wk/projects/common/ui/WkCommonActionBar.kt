@@ -2,13 +2,16 @@ package com.wk.projects.common.ui
 
 import android.content.Context
 import android.util.AttributeSet
+import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.annotation.DimenRes
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.wk.projects.common.R
+import com.wk.projects.common.resource.WkContextCompat
 
 /**
  * author : wk <br></br>
@@ -56,6 +59,11 @@ class WkCommonActionBar : ConstraintLayout {
 
     fun setMiddleViewText(resId:Int){
         tvActionBarMiddle.setText(resId)
+    }
+
+    fun setMiddleViewTextSize(dimenResId:Int){
+        tvActionBarMiddle.setTextSize(TypedValue.COMPLEX_UNIT_PX,
+            WkContextCompat.getDimension(dimenResId))
     }
 
     fun setMiddleViewGravity(gravity:Int){
