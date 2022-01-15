@@ -31,8 +31,7 @@ android {
         main {
             res.srcDirs =
                     [
-                        'src/main/res',
-                        'src/main/res/drawable/bg'
+                        'src/main/res'
                     ]
         }
     }
@@ -95,6 +94,8 @@ dependencies {
 
     //时间选择
     api 'com.contrarywind:Android-PickerView:4.1.9'
+
+    api 'com.github.PhilJay:MPAndroidChart:v3.1.0'
 
 }
 repositories {
