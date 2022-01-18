@@ -1,5 +1,6 @@
 package com.wk.projects.common.ui.recycler
 
+import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -28,14 +29,14 @@ abstract class BaseRecyclerViewAdapter<R, T : RecyclerView.ViewHolder>(
         } else {
             val rootView = LayoutInflater.from(parent.context).inflate(
                     getItemLayoutResId(parent, viewType), parent, false)
-            createVH(rootView)
+            createVH(rootView,viewType)
         }
     }
 
 
     abstract fun getItemLayoutResId(parent: ViewGroup, viewType: Int): Int
 
-    abstract fun createVH(rootView: View): T
+    abstract fun createVH(rootView: View, viewType: Int): T
 
     override fun onBindViewHolder(holder: T, position: Int) {
         adapter?.onBindViewHolder(holder, position)
@@ -50,6 +51,7 @@ abstract class BaseRecyclerViewAdapter<R, T : RecyclerView.ViewHolder>(
 
     fun getItem(position: Int) = mData[getDataReallyPosition(position)]
 
+    @SuppressLint("NotifyDataSetChanged")
     fun updateData(data: List<R>) {
         mData.clear()
         mData.addAll(data)
