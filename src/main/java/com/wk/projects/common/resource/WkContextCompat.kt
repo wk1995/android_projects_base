@@ -16,17 +16,29 @@ import com.wk.projects.common.configuration.WkProjects
  */
 object WkContextCompat {
 
+    @Deprecated(
+        "use getColor instead",
+        ReplaceWith("WkContextCompat.getColor(colorResId)", "com.wk.projects.common.resource")
+    )
     fun getColor(context: Context, colorResId: Int) =
-            ContextCompat.getColor(context, colorResId)
+        ContextCompat.getColor(context, colorResId)
+
+    fun getColor(colorResId: Int) = ContextCompat.getColor(WkProjects.getApplication(), colorResId)
 
     fun getDrawable(context: Context, drawableResId: Int) =
-            ContextCompat.getDrawable(context, drawableResId)
+        ContextCompat.getDrawable(context, drawableResId)
 
-    fun getString(strResId: Int):String{
-       return WkProjects.getApplication().getString(strResId)
+    fun getString(strResId: Int): String {
+        return WkProjects.getApplication().getString(strResId)
     }
 
-    fun getStringByFormat(strResId:Int,vararg str:String):String{
-        return String.format(getString(strResId),str[0])
+    fun getStringByFormat(strResId: Int, str: String): String {
+        return String.format(getString(strResId), str)
     }
+
+    fun getDimensionPixelSize(dimenId: Int) =
+        WkProjects.getApplication().resources.getDimensionPixelSize(dimenId)
+
+    fun getDimension(dimenId: Int) =
+        WkProjects.getApplication().resources.getDimension(dimenId)
 }
