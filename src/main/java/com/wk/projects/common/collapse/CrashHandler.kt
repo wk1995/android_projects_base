@@ -5,28 +5,45 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Environment
-import android.os.Looper
 import android.os.Process
 import androidx.annotation.RequiresApi
 import com.wk.projects.common.communication.constant.BundleKey.PATH
+import com.wk.projects.common.configuration.WkProjects
+import com.wk.projects.common.constant.WkStringConstants
 import com.wk.projects.common.helper.file.path.CommonFilePath.COMMON_ROOT_PATH
 import com.wk.projects.common.helper.file.path.CommonFilePath.ES_PATH
-import rx.Observable
-import rx.schedulers.Schedulers
 import java.io.*
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.collections.HashMap
 
 @Suppress("unused")
-class CrashHandler private constructor(private val context: Context,
-                                       private val moduleName: String)
-    : Thread.UncaughtExceptionHandler {
+class CrashHandler private constructor(
+    private val context: Context,
+    private val moduleName: String
+) : Thread.UncaughtExceptionHandler {
     //先把原先的取出来
-    private val mDefaultCrashHandler: Thread.UncaughtExceptionHandler?  by lazy {Thread.getDefaultUncaughtExceptionHandler()}
-    private val logPath by lazy { ES_PATH + COMMON_ROOT_PATH + moduleName + LOG }
+    private val mDefaultCrashHandler: Thread.UncaughtExceptionHandler? by lazy { Thread.getDefaultUncaughtExceptionHandler() }
+
+    private val defaultLogPath = ES_PATH + COMMON_ROOT_PATH + moduleName + LOG
+
+    /**日志文件夹*/
+    private var mLogPath = defaultLogPath
+
 
     init {
         Thread.setDefaultUncaughtExceptionHandler(this)
+    }
+
+
+    fun getLogPath() = mLogPath
+
+    /**
+     * @param needMoveFile 是否需要移动以前的日志文件到新目录下
+     * @param newLogPath 新的日志目录
+     * */
+    fun setLogPath(needMoveFile: Boolean, newLogPath: String) {
+        mLogPath = newLogPath
     }
 
     /**
@@ -53,7 +70,7 @@ class CrashHandler private constructor(private val context: Context,
             e.printStackTrace()
         } finally {
             val intent = Intent()
-            intent.putExtra(PATH, logPath)
+            intent.putExtra(PATH, mLogPath)
             intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
             intent.action = "com.wk.projects.collapse"
             context.startActivity(intent)
@@ -70,8 +87,8 @@ class CrashHandler private constructor(private val context: Context,
         }
         val current = System.currentTimeMillis()
         val time = SimpleDateFormat("yyyy年MM月dd日HH时mm分ss秒", Locale.getDefault())
-                .format(Date(current))
-        val file = File(logPath)
+            .format(Date(current))
+        val file = File(mLogPath)
         //先删除之前的异常信息
         /** if (file.exists()) {
          * DeleteFile(file);
@@ -90,8 +107,10 @@ class CrashHandler private constructor(private val context: Context,
         }
         val fileName = file.toString() + File.separator + time + FILE_NAME_SUFFIX
         val pw = PrintWriter(
-                BufferedWriter(
-                        FileWriter(fileName)), true)
+            BufferedWriter(
+                FileWriter(fileName)
+            ), true
+        )
         pw.println(time)
         dumpPhoneInfo(pw)
         pw.println()
@@ -173,12 +192,35 @@ class CrashHandler private constructor(private val context: Context,
         }
     }
 
+
     companion object {
         private const val FILE_NAME_SUFFIX = "log.txt"
         private const val LOG = "/LOG"
 
         object CrashHandlerFactory {
-            fun getCrashHandler(context: Context, moduleName: String) = CrashHandler(context, moduleName)
+
+            private val crashHandlerMap by lazy {
+                HashMap<String, CrashHandler>()
+            }
+
+
+            fun getCrashHandler(context: Context, moduleName: String): CrashHandler {
+                var cache = crashHandlerMap[moduleName]
+                if (cache != null) {
+                    return cache
+                }
+                cache = CrashHandler(context, moduleName)
+                crashHandlerMap[moduleName] = cache
+                return cache
+            }
+
+            fun getCrashHandler(): CrashHandler {
+                val context = WkProjects.getApplication()
+                val moduleName = WkProjects.getModuleName() ?: WkStringConstants.STR_EMPTY
+                return getCrashHandler(context, moduleName)
+            }
+
+
         }
 
         fun init(context: Context, moduleName: String): CrashHandler {
