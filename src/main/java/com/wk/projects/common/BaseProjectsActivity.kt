@@ -1,5 +1,6 @@
 package com.wk.projects.common
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
@@ -25,6 +26,7 @@ abstract class BaseProjectsActivity : AppCompatActivity(), IFragmentToActivity,
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        WkLog.d(TAG," ${this::class.java.simpleName}  onCreate")
         beforeSetContentView()
         val resLayout=initResLayId()
         if(resLayout is Int ){
@@ -51,7 +53,10 @@ abstract class BaseProjectsActivity : AppCompatActivity(), IFragmentToActivity,
         WkLog.d("${this::class.java.simpleName} onRestart",TAG)
     }
 
-
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+        WkLog.d("${this::class.java.simpleName} onNewIntent",TAG)
+    }
 
     override fun onPause() {
         super.onPause()
