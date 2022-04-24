@@ -14,27 +14,26 @@ import com.wk.projects.common.log.local.ILocalPrintStrategy
  */
 class SystemPrintStrategy: ILocalPrintStrategy {
     override fun v(msg: Any?, vararg tag: String): Int {
-        println("$tag   $msg")
+        tag.forEach {
+            println("$it   $msg")
+        }
+
         return 0
     }
 
     override fun i(msg: Any?, vararg tag: String): Int {
-        println("$tag   $msg")
-        return 0
+        return v(msg, *tag)
     }
 
     override fun d(msg: Any?, vararg tag: String): Int {
-        println("$tag   $msg")
-        return 0
+        return v(msg, *tag)
     }
 
     override fun e(msg: Any?, vararg tag: String): Int {
-        println("$tag   $msg")
-        return 0
+        return v(msg, *tag)
     }
 
     override fun w(msg: Any?, vararg tag: String): Int {
-        println("$tag   $msg")
-        return 0
+        return v(msg, *tag)
     }
 }
