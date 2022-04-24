@@ -27,7 +27,7 @@ abstract class BaseProjectsActivity : AppCompatActivity(), IFragmentToActivity,
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         WkLog.d(TAG," ${this::class.java.simpleName}  onCreate")
-        beforeSetContentView()
+//        beforeSetContentView()
         val resLayout=initResLayId()
         if(resLayout is Int ){
             setContentView(resLayout)
@@ -97,4 +97,9 @@ abstract class BaseProjectsActivity : AppCompatActivity(), IFragmentToActivity,
     fun showToast(msg:String){
         WkToast.showToast(msg)
     }
+
+    protected fun startActivity(`class`:Class<*>){
+        startActivity(Intent(this,`class`))
+    }
+
 }
